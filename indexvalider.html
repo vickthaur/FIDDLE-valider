@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Validation...</title>
+</head>
+<body onload="document.getElementById('f').submit();">
+    <div style="text-align: center; font-family: sans-serif; margin-top: 100px;">
+        <h2>Enregistrement du point...</h2>
+        <p>Ne fermez pas cette page.</p>
+    </div>
+
+    <form id="f" action="TON_LIEN_DE_FORMULAIRE_BREVO_LISTE_PASSAGE" method="POST" style="display:none;">
+        <input type="email" name="EMAIL" id="email-field">
+        <input type="hidden" name="locale" value="fr">
+    </form>
+
+    <script>
+        const emailScanne = new URLSearchParams(window.location.search).get('email');
+        document.getElementById('email-field').value = emailScanne;
+    </script>
+</body>
+</html>
