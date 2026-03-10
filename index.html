@@ -2,22 +2,52 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Validation...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation en cours...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .loader-card { background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #10b981; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h2 { font-size: 18px; color: #2d3436; }
+        p { color: #636e72; font-size: 14px; }
+    </style>
 </head>
-<body onload="document.getElementById('f').submit();">
-    <div style="text-align: center; font-family: sans-serif; margin-top: 100px;">
-        <h2>Enregistrement du point...</h2>
-        <p>Ne fermez pas cette page.</p>
+<body onload="validerEtEnvoyer();">
+
+    <div class="loader-card">
+        <div class="spinner"></div>
+        <h2>Validation du point...</h2>
+        <p>Client : <span id="display-email" style="font-weight:600; color:#10b981;">...</span></p>
     </div>
 
-    <form id="f" action="TON_LIEN_DE_FORMULAIRE_BREVO_LISTE_PASSAGE" method="POST" style="display:none;">
+    <form id="form-brevo" action="https://9d65705b.sibforms.com/serve/MUIFADjqIProT_Cl28inJrj0bX2b4zK_XA-Ov9LDV2gWtskwsKQ7VVo09QVM5hlDGzylzy6392uTx_swkr0hHIW_VqQybc45jJR5TbzoCVHjs8OaZqF1BF4j-j2hbOTYyNbscvcENAbY2zKv6QDi8hTpGkzLbe-2Ng8qNIkZaPO7yAU4sy6CCAxOAZhIpb1H-gBjsPxIEeL9bWuUsg==" method="POST" style="display:none;">
         <input type="email" name="EMAIL" id="email-field">
+        <input type="text" name="email_address_check" value="">
         <input type="hidden" name="locale" value="fr">
     </form>
 
     <script>
-        const emailScanne = new URLSearchParams(window.location.search).get('email');
-        document.getElementById('email-field').value = emailScanne;
+        function validerEtEnvoyer() {
+            // 1. On récupère l'email scanné dans l'URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+
+            if (email) {
+                document.getElementById('display-email').innerText = email;
+                document.getElementById('email-field').value = email;
+                
+                // 2. On envoie automatiquement le formulaire à Brevo après 1.5 seconde
+                // Ce délai permet de s'assurer que l'utilisateur voit que ça travaille
+                setTimeout(() => {
+                    document.getElementById('form-brevo').submit();
+                }, 1500);
+            } else {
+                alert("Erreur : Aucun client détecté par le scanner.");
+                window.location.href = "scanner.html"; // Retour au scanner si erreur
+            }
+        }
     </script>
 </body>
 </html>
