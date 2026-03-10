@@ -14,8 +14,7 @@
         .error-icon { font-size: 50px; color: #ef4444; display: none; }
         h1 { font-size: 1.2rem; margin: 15px 0; }
         #errorMessage { color: #ef4444; font-size: 0.8rem; margin-top: 10px; display: none; background: rgba(239, 68, 68, 0.1); padding: 10px; border-radius: 5px; }
-        .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #ff7675; color: white; text-decoration: none; border-radius: 10px; font-weight: 600; display: none; transition: 0.3s; }
-        .btn:hover { background: #e86362; }
+        .btn { display: inline-block; margin-top: 20px; padding: 12px 24px; background: #ff7675; color: white; text-decoration: none; border-radius: 10px; font-weight: 600; display: none; }
     </style>
 </head>
 <body>
@@ -27,29 +26,27 @@
     
     <h1 id="statusText">Validation du point...</h1>
     <p id="emailDisplay" style="color: #aaa; font-size: 0.9rem; font-weight: bold;"></p>
-    
     <div id="errorMessage"></div>
 
     <a href="https://vickthaur.github.io/FIDDLE-valider/scanner.html" id="btnBack" class="btn">Scanner un autre client</a>
 </div>
 
 <script>
-    // 1. Récupération de l'email dans l'URL
     const urlParams = new URLSearchParams(window.location.search);
     const emailClient = urlParams.get('email');
     const statusText = document.getElementById('statusText');
     const emailDisplay = document.getElementById('emailDisplay');
     const errorMessage = document.getElementById('errorMessage');
 
-    // CONFIGURATION (À REMPLIR)
-    const API_KEY = "TON_CODE_XKEYSIB_ICI"; // ⚠️ COLLE TA CLÉ API ICI
-    const LIST_ID = 5; // ⚠️ VÉRIFIE L'ID DE TA LISTE "PASSAGE"
+    // CONFIGURATION AUTOMATISÉE
+    const API_KEY = "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"; 
+    const LIST_ID = 5; 
 
     if (emailClient && emailClient.includes('@')) {
         emailDisplay.innerText = emailClient;
         validerPoint(emailClient);
     } else {
-        showError("Email invalide ou manquant.");
+        showError("Email invalide ou scan incorrect.");
     }
 
     async function validerPoint(email) {
@@ -69,17 +66,14 @@
             if (response.ok) {
                 showSuccess("Point ajouté avec succès !");
             } else {
-                // Affiche l'erreur détaillée de Brevo
                 let msg = "Erreur Brevo";
                 if (result.message && result.message.includes("exist")) {
-                    msg = "Ce client n'est pas encore inscrit dans Brevo !";
-                } else if (response.status === 401) {
-                    msg = "Clé API invalide (Vérifie la clé xkeysib)";
+                    msg = "Client inconnu (Inscrivez-le d'abord !)";
                 }
                 showError(msg, result.message || "");
             }
         } catch (error) {
-            showError("Problème de connexion internet.");
+            showError("Problème de connexion.");
         }
     }
 
@@ -96,16 +90,13 @@
         document.getElementById('errorIcon').style.display = 'block';
         statusText.innerText = msg;
         statusText.style.color = "#ef4444";
-        
         if(technicalDetails) {
-            errorMessage.innerText = "Détail : " + technicalDetails;
+            errorMessage.innerText = technicalDetails;
             errorMessage.style.display = 'block';
         }
-        
         document.getElementById('btnBack').style.display = 'inline-block';
         document.getElementById('btnBack').innerText = "Réessayer";
     }
 </script>
-
 </body>
 </html>
